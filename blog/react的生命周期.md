@@ -50,6 +50,11 @@
 - `state`
 
 
+### 组件生命周期图片预览
+
+![生命周期](https://raw.githubusercontent.com/lixiaraodd01/lisa/master/images/component_lifecycle_01.jpg)
+
+
 
 ### 一个组件中必须要用到的生命周期方法
 
