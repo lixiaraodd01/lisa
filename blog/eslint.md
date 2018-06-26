@@ -2,6 +2,7 @@
 
 当一个项目多个人开发的时候，就会出现“百花齐放”的局面。小到缩进是Tab是2个字符还是4个字符，单引号和双引号...之类的编写方式。大到变量为定义使用，重复定义等情况。为了代码质量高，阅读性好，后期易维护。团队使用了eslint。基于airbnb制定的规则。
 
+### eslint进阶使用
 
 ### eslint + eslint-friendly-formatter 统一js代码编写规范
 1. `yarn add` 安装 `eslint`, `eslint-friendly-formatter`, `babel-eslint`,`eslint-config-airbnb` 等一系列依赖包(目前项目中已经写入 `package.json`中，直接 `yarn`就好了)
@@ -138,6 +139,54 @@
 6. 在项目根目录中执行 `npm run lint`根据提示一一更正不合规范代码。
 
 7. 哪个模块不想进行`eslint`检测则可以在根目录下`.eslintignore`文件中配置相应文件
+
+
+### 在react + webpack + git 中使用eslint
+
+1. 引入`eslint-loader`插件在webpack配置, 配置如下
+
+``` js
+module.exports = {
+  // ...
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: "eslint-loader",
+        options: {
+          // eslint options (if necessary)
+        }
+      },
+    ],
+  },
+  // ...
+}
+```
+具体参数配置请参照 [eslint-loader](https://github.com/webpack-contrib/eslint-loader)
+
+2. 在`.eslintrc`文件中配置
+
+```json
+{
+  "parser": "babel-eslint",
+  "rules": {
+    // rules config
+  }
+}
+```
+3. 直接执行命令可以在终端中看到检验结果及错误提示
+
+4. 增加`pre-commit` 钩子，在`package.json`中配置
+``` json
+"pre-commit": [
+  "eslint"
+]
+```
+
+在每次提交之前，都会运行eslint命令进行检测，如果检测到有违反代码规则的情况，则会返回1，导致git commit失败。
+
+
 ### eslint + prettier
 
 > 现在流行的一种，但坑太多了。感兴趣的可以玩一波。欢迎一起讨论。
