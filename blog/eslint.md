@@ -194,8 +194,9 @@ module.exports = {
 一开始想使用eslint + Prettier(vscode编辑器上的插件) 偷懒，在保存的时候就直接格式化代码了。语法类的编辑器也有提示。捣鼓了2个晚上，晚上在家用os系统，然后白天在公司用win系统。切换时，没那么顺利，只在家里的mac配置成功了。(例如: eslint 中的`linebreak-style`不同，vscode配置项一样也会出现问题。后面有时间再试一试)
 
 
-
 关于eslint + prettier保存自动配置的，网络上很多文件。我在mac中vscode 编辑器 配置的文件如下。
+1. 在vscode编辑上安装 `eslint` 和 `prettier` 插件
+2. 在vscode 点开首选项进行设置，我的设置如下
 
 ```js
 {
@@ -221,6 +222,13 @@ module.exports = {
     "prettier.trailingComma": "all"
 }
 ```
+3. 在项目中安装依赖
+``` bash
+ yarn add eslint-config-prettier eslint-plugin-prettier prettier -D
+```
+
+4. 在 `.eslintrc.js`配置
+
 eslint 配置如下
 
 ``` js
@@ -230,7 +238,15 @@ eslint 配置如下
   },
   "parser": "babel-eslint",
   "extends": "airbnb",
+  "plugins": ["prettier"],
   "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "trailingComma": "all"
+      }
+    ],
     "generator-star-spacing": [0],
     "consistent-return": [0],
     "react/forbid-prop-types": [0],
@@ -269,7 +285,45 @@ eslint 配置如下
   }
 }
 ```
-保存的时候回直接格式化文件。例如`{}`Object中留空格，Array中不留，语句后自动添加 `;`，单双引号等等。主要是开启了 `eslint.autoFixOnSave`。有兴趣的可以试试。
+保存的时候回直接格式化文件。例如`{}`Object中留空格，Array中不留，语句后自动添加 `;`，单双引号等等。主要是开启了 `eslint.autoFixOnSave`。
+有兴趣的可以试试。
+
+
+### 写在最后
+
+在 `windows`, `unix`, `OS`系统默认换行不同
+
+`windows`是 `CRLF` 即 `\r\n`, `unix`是 `LF` 即 `\n`, `MAC OS` V9之前是`CR`, v9 之后都是 `LF`;
+`\r`是光标回到开头，`\n`是光标往下移一行。
+为了规范统一，项目中设置了 
+```js
+"linebreak-style": ["error", "unix"]
+```
+在 windows下会提示有异常，可以通过两种方式解决。
+
+一种是在项目根目录添加一个 `.eitorconfig`,配置如下
+
+```js
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 2
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+```
+第二种是在git命令操作，在提交前统一处理。
+
+``` bash
+# 提交时转换为LF，检出时不转换
+git config --global core.autocrlf input
+
+```
+
+
 
 
 
